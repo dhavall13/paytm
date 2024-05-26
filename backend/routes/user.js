@@ -6,26 +6,26 @@ const { User } = require('../db')
 const { JWT_SECRET } = require('../config')
 const { authMiddleware } = require('../middleware')
 
-const signupSchema = zod.object({
+const signupBody = zod.object({
   username: zod.string().email(),
   password: zod.string(),
   firstName: zod.string(),
   lastName: zod.string(),
 })
 
-const signinSchema = zod.object({
+const signinBody = zod.object({
   username: zod.string().email(),
   password: zod.string(),
 })
 
-const updateSchema = zod.object({
+const updateBody = zod.object({
   firstName: zod.string().optional(),
   lastName: zod.string().optional(),
   password: zod.string().optional(),
 })
 
 router.post('/signup', async (req, res) => {
-  const { success } = signupSchema.safeParse(req.body)
+  const { success } = signupBody.safeParse(req.body)
   if (!success) {
     return res.status(411).json({
       message: 'Email already taken / Incorrect inputs',
@@ -65,7 +65,7 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/signin', async (req, res) => {
-  const { success } = signinSchema.safeParse(req.body)
+  const { success } = signinBody.safeParse(req.body)
   if (!success) {
     return res.status(411).json({
       message: 'Incorrect inputs',
@@ -98,7 +98,7 @@ router.post('/signin', async (req, res) => {
 // update
 
 router.put('/', authMiddleware, async (req, res) => {
-  const { success } = updateSchema.safeParse(req.body)
+  const { success } = updateBody.safeParse(req.body)
 
   if (!success) {
     res.status(411).json({
