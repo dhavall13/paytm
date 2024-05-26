@@ -33,7 +33,7 @@ router.post('/signup', async (req, res) => {
   }
 
   const existingUser = await User.findOne({
-    username: body.username,
+    username: req.body.username,
   })
 
   if (existingUser) {
